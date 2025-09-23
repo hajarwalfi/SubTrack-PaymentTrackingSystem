@@ -74,15 +74,4 @@ public abstract class Subscription {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Abonnement{" +
-                "id='" + id + '\'' +
-                ", nom Service='" + service_name + '\'' +
-                ", montant Mensuel=" + monthly_amount +
-                ", date Debut=" + start_date +
-                ", date Fin=" + end_date +
-                ", statut=" + status +
-                '}';
-    }
 }

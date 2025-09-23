@@ -11,13 +11,6 @@ public class Payment {
     private String payment_type;
     private PaymentStatus status;
 
-    public Payment(String id_payment, String subscription_id, LocalDate due_date, String payment_type) {
-        this.id_payment = id_payment;
-        this.subscription_id = subscription_id;
-        this.due_date = due_date;
-        this.payment_type = payment_type;
-        this.status = PaymentStatus.UNPAID;
-    }
 
     public Payment() {
     }
@@ -70,15 +63,4 @@ public class Payment {
         this.payment_type = payment_type;
     }
 
-    @Override
-    public String toString() {
-        return "Paiement{" +
-                "id Paiement='" + id_payment + '\'' +
-                ", id Abonnement='" + subscription_id + '\'' +
-                ", date Echeance=" + due_date +
-                ", date Paiement=" + payment_date +
-                ", type Paiement='" + payment_type + '\'' +
-                ", statut=" + status +
-                '}';
-    }
 }

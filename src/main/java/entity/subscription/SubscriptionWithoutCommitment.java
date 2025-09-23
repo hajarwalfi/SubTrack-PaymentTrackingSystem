@@ -11,15 +11,4 @@ public class SubscriptionWithoutCommitment extends Subscription {
     public SubscriptionWithoutCommitment() {
     }
 
-    @Override
-    public String toString() {
-        return "AbonnementSansEngagement{" +
-                "id='" + id + '\'' +
-                ", nomService='" + service_name + '\'' +
-                ", montantMensuel=" + monthly_amount +
-                ", dateDebut=" + start_date +
-                ", dateFin=" + end_date +
-                ", statut=" + status +
-                '}';
-    }
 }

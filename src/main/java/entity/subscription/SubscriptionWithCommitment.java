@@ -21,16 +21,4 @@ public class SubscriptionWithCommitment extends Subscription {
         this.commitment_duration_months = commitment_duration_months;
     }
 
-    @Override
-    public String toString() {
-        return "AbonnementAvecEngagement{" +
-                "id='" + id + '\'' +
-                ", nom Service='" + service_name + '\'' +
-                ", montant Mensuel=" + monthly_amount +
-                ", date Debut=" + start_date +
-                ", date Fin=" + end_date +
-                ", statut=" + status +
-                ", duree Engagement Mois=" + commitment_duration_months +
-                '}';
-    }
 }

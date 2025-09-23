@@ -1,4 +1,7 @@
 package entity.enums;
 
-public class PaymentStatus {
+public enum PaymentStatus {
+        PAID,
+        UNPAID,
+        LATE
 }

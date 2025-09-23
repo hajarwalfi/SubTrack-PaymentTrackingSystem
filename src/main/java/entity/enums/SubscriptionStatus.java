@@ -1,4 +1,7 @@
 package entity.enums;
 
-public class SubscriptionStatus {
+public enum SubscriptionStatus {
+    ACTIVE,
+    SUSPENDED,
+    CANCELLED
 }

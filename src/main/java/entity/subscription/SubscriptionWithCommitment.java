@@ -10,6 +10,10 @@ public class SubscriptionWithCommitment  extends Subscription {
         this.commitment_duration_months = commitment_duration_months;
     }
 
+    public SubscriptionWithCommitment() {
+
+    }
+
     public int getCommitment_duration_months(){
         return commitment_duration_months;
     }

@@ -8,6 +8,10 @@ public class SubscriptionWithoutCommitment extends Subscription{
         super(service_name,monthly_amount, start_date ,end_date);
     }
 
+    public SubscriptionWithoutCommitment() {
+
+    }
+
     @Override
     public String toString(){
         return "AbonnementSansEngagement{" +

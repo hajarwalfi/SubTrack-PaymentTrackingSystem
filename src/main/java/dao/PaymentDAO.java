@@ -113,7 +113,7 @@ public class PaymentDAO {
             stmt.setString(4, payment.getPayment_type());
             stmt.setString(5, payment.getStatus().name());
             stmt.setString(6, payment.getId_payment());
-            int rowsUpdated = stmt.executeUpdate();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("erreur de mise à jour du paiement");
         } finally {
@@ -135,6 +135,7 @@ public class PaymentDAO {
             if (rowsDeleted == 0) {
                 System.out.println("aucun paiement trouvé pour le supprimer");
             }
+            System.out.println("paiement supprimé avec succés");
         } catch (SQLException e) {
             System.err.println("erreur de suppression du paiement");
         } finally {
@@ -144,31 +145,6 @@ public class PaymentDAO {
                 System.err.println("erreur de fermeture des ressources: " + e.getMessage());
             }
         }
-    }
-
-    public List<Payment> findUnpaidBySubscription(String subscriptionId) {
-        List<Payment> unpaidPayments = new ArrayList<>();
-        String sql = "SELECT * FROM payment WHERE subscription_id = ? AND status IN ('UNPAID', 'LATE') ORDER BY due_date";
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = DatabaseConnection.getConnection().prepareStatement(sql);
-            stmt.setString(1, subscriptionId);
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                unpaidPayments.add(Helpers.mapResultSetToPayment(rs));
-            }
-        } catch (SQLException e) {
-            System.err.println("erreur de récupération des paiements impayés: " + e.getMessage());
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                System.err.println("erreur de fermeture des ressources: " + e.getMessage());
-            }
-        }
-        return unpaidPayments;
     }
 
     public List<Payment> findLastPayments(int limit) {

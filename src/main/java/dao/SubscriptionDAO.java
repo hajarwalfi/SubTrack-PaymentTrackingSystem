@@ -103,10 +103,8 @@ public class SubscriptionDAO {
                 stmt.setNull(6, Types.INTEGER);
             }
             stmt.setString(7, subscription.getId());
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("abonnement mis a jour avec succes");
-            }
+            stmt.executeUpdate();
+            System.out.println("abonnement mis a jour avec succes");
         } catch (SQLException e) {
             System.err.println("erreur de la mise a jour");
         } finally {
@@ -139,54 +137,5 @@ public class SubscriptionDAO {
                 System.err.println("erreur de fermeture des ressources: " + e.getMessage());
             }
         }
-    }
-
-    public List<Subscription> findActiveSubscriptions() {
-        List<Subscription> abonnements = new ArrayList<>();
-        String sql = "SELECT * FROM subscription WHERE status = 'ACTIVE'";
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = DatabaseConnection.getConnection().prepareStatement(sql);
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                abonnements.add(Helpers.mapResultSetToAbonnement(rs));
-            }
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la recherche des abonnements actifs: " + e.getMessage());
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                System.err.println("erreur de fermeture des ressources: " + e.getMessage());
-            }
-        }
-        return abonnements;
-    }
-
-    public List<Subscription> findByType(String type) {
-        List<Subscription> subscriptions = new ArrayList<>();
-        String sql = "SELECT * FROM subscription WHERE subscription_type = ?";
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = DatabaseConnection.getConnection().prepareStatement(sql);
-            stmt.setString(1, type);
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                subscriptions.add(Helpers.mapResultSetToAbonnement(rs));
-            }
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la recherche par type");
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                System.err.println("erreur de fermeture des ressources: " + e.getMessage());
-            }
-        }
-        return subscriptions;
     }
 }

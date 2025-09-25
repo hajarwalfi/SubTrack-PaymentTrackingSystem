@@ -1,7 +1,6 @@
 package entity.payment;
 
-import entity.enums.PaymentStatus;
-import service.PaymentService;
+import enums.PaymentStatus;
 
 import java.time.LocalDate;
 
@@ -21,6 +20,10 @@ public class Payment {
         this.due_date = due_date;
         this.payment_type = payment_type;
         this.status = PaymentStatus.UNPAID;
+    }
+
+    public Payment() {
+
     }
 
     public String getId_payment() {

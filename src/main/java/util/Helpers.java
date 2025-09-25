@@ -1,10 +1,13 @@
 package util;
 
-import entity.enums.SubscriptionStatus;
+import enums.PaymentStatus;
+import enums.SubscriptionStatus;
+import entity.payment.Payment;
 import entity.subscription.Subscription;
 import entity.subscription.SubscriptionWithCommitment;
 import entity.subscription.SubscriptionWithoutCommitment;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -39,4 +42,21 @@ public class Helpers {
             return subscription;
         }
     }
+
+
+    public static Payment mapResultSetToPayment(ResultSet rs) throws SQLException {
+        Payment payment = new Payment();
+        payment.setId_payment(rs.getString("id_payment"));
+        payment.setSubscription_id(rs.getString("subscription_id"));
+        payment.setDue_date(rs.getDate("due_date").toLocalDate());
+
+        Date paymentDate = rs.getDate("payment_date");
+        payment.setPayment_date(paymentDate != null ? paymentDate.toLocalDate() : null);
+
+        payment.setPayment_type(rs.getString("payment_type"));
+        payment.setStatus(PaymentStatus.valueOf(rs.getString("status")));
+
+        return payment;
+    }
+
 }

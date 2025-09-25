@@ -35,6 +35,7 @@ public class SubscriptionDAO {
 
         } catch(SQLException e) {
             System.err.println("erreur de creation d'babonnement");
+            throw e;
         }
     }
 

@@ -33,6 +33,12 @@ L'application utilise **Java 8** avec programmation fonctionnelle (Stream API, L
 - Rapport détaillé des impayés
 - Analyse par statut de paiement
 
+## Diagramme UML
+
+![Diagramme UML du Système](uml\ClassDiagram.png)
+
+Le diagramme UML ci-dessus illustre l'architecture et les relations entre les différentes classes du système SubTrack.
+
 ## Architecture
 
 L'application suit une architecture en couches:

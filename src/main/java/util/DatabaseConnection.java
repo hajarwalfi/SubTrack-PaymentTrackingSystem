@@ -31,8 +31,26 @@ public class DatabaseConnection {
                 System.err.println("la connexion a la base de donnée est echouée" + e.getMessage());
             }
         }
+        public static boolean testConnection() {
+            try {
+                return connection != null && !connection.isClosed();
+            } catch (SQLException e) {
+                System.err.println("Test de connexion échoué: " + e.getMessage());
+                return false;
+            }
+        }
 
         public static Connection getConnection(){
             return connection;
+        }
+        public static void closeConnection() {
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.close();
+                    System.out.println("Connexion à la base de données fermée");
+                }
+            } catch (SQLException e) {
+                System.err.println("Erreur lors de la fermeture de la connexion: " + e.getMessage());
+            }
         }
 }

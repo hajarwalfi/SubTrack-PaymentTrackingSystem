@@ -26,55 +26,20 @@ public class Menu {
         boolean exit = false;
 
         while (!exit) {
-            System.out.println(" MENU PRINCIPAL ");
-            System.out.println("1. Gestion des abonnements");
-            System.out.println("2. Gestion des paiements");
-            System.out.println("3. Rapports et statistiques");
-            System.out.println("4. Détection des impayés");
-            System.out.println("0. Quitter");
-
-            int choice = InputValidator.readInt("\nVotre choix");
-
-            switch (choice) {
-                case 1:
-                    subscriptionMenu();
-                    break;
-                case 2:
-                    paymentMenu();
-                    break;
-                case 3:
-                    reportsMenu();
-                    break;
-                case 4:
-                    paymentService.detectOverduePayments();
-                    paymentService.displayMissedPaymentsReport();
-                    break;
-                case 0:
-                    exit = true;
-                    break;
-                default:
-                    System.out.println("Choix invalide!");
-            }
-        }
-    }
-
-    private void subscriptionMenu() {
-        boolean back = false;
-
-        while (!back) {
-            System.out.println(" GESTION DES ABONNEMENTS ");
-            System.out.println("1. Créer un abonnement");
+            System.out.println("\n=== SYSTÈME DE SUIVI DES ABONNEMENTS ===");
+            System.out.println("1. Créer des abonnements (avec/sans engagement)");
             System.out.println("2. Modifier un abonnement");
             System.out.println("3. Supprimer un abonnement");
-            System.out.println("4. Résilier un abonnement");
-            System.out.println("5. Suspendre un abonnement");
-            System.out.println("6. Réactiver un abonnement");
-            System.out.println("7. Consulter tous les abonnements");
-            System.out.println("8. Consulter les abonnements actifs");
-            System.out.println("9. Rechercher par type");
-            System.out.println("10. Afficher les paiements d'un abonnement");
-            System.out.println("11. Prolonger un abonnement (sans engagement uniquement)");
-            System.out.println("0. Retour");
+            System.out.println("4. Consulter la liste des abonnements");
+            System.out.println("5. Afficher les paiements d'un abonnement");
+            System.out.println("6. Enregistrer un paiement");
+            System.out.println("7. Modifier un paiement");
+            System.out.println("8. Supprimer un paiement");
+            System.out.println("9. Consulter les paiements manqués avec le montant total impayé");
+            System.out.println("10. Afficher la somme payée d'un abonnement");
+            System.out.println("11. Afficher les 5 derniers paiements");
+            System.out.println("12. Générer des rapports financiers (mensuels, annuels, impayés)");
+            System.out.println("0. Quitter");
 
             int choice = InputValidator.readInt("\nVotre choix");
 
@@ -89,31 +54,34 @@ public class Menu {
                     deleteSubscription();
                     break;
                 case 4:
-                    cancelSubscription();
-                    break;
-                case 5:
-                    suspendSubscription();
-                    break;
-                case 6:
-                    reactivateSubscription();
-                    break;
-                case 7:
                     displayAllSubscriptions();
                     break;
-                case 8:
-                    displayActiveSubscriptions();
-                    break;
-                case 9:
-                    searchByType();
-                    break;
-                case 10:
+                case 5:
                     displaySubscriptionPayments();
                     break;
+                case 6:
+                    recordPayment();
+                    break;
+                case 7:
+                    updatePayment();
+                    break;
+                case 8:
+                    deletePayment();
+                    break;
+                case 9:
+                    paymentService.displayUnpaidPaymentsWithTotal();
+                    break;
+                case 10:
+                    displayTotalPaid();
+                    break;
                 case 11:
-                    extendSubscription();
+                    paymentService.displayLastPayments(5);
+                    break;
+                case 12:
+                    reportsMenu();
                     break;
                 case 0:
-                    back = true;
+                    exit = true;
                     break;
                 default:
                     System.out.println("Choix invalide!");
@@ -159,7 +127,7 @@ public class Menu {
             if (InputValidator.readConfirmation("Confirmer la création ? (oui/non): ")) {
                 subscriptionService.createSubscription(subscription);
             } else {
-                System.out.println("✗ Création annulée");
+                System.out.println("Création annulée");
             }
 
         } catch (SQLException e) {
@@ -181,13 +149,25 @@ public class Menu {
             String amountStr = InputValidator.readString("Nouveau montant mensuel [Entrée pour garder]");
             double newAmount = amountStr.isEmpty() ? subscription.getMonthly_amount() : Double.parseDouble(amountStr);
 
-            if (subscription instanceof SubscriptionWithCommitment) {
-                System.out.println("\n⚠️ Note : La durée d'engagement ne peut pas être modifiée (contrat fixe)");
+            System.out.println("\nStatut actuel: " + subscription.getStatus());
+            System.out.println("1. ACTIVE");
+            System.out.println("2. SUSPENDED");
+            System.out.println("3. CANCELLED");
+            System.out.println("0. Garder le statut actuel");
+            int statusChoice = InputValidator.readInt("Nouveau statut");
+            
+            String newStatus = subscription.getStatus().toString();
+            switch (statusChoice) {
+                case 1: newStatus = "ACTIVE"; break;
+                case 2: newStatus = "SUSPENDED"; break;
+                case 3: newStatus = "CANCELLED"; break;
             }
+
 
             System.out.println("\n=== RÉCAPITULATIF DES MODIFICATIONS ===");
             System.out.println("Ancien nom: " + subscription.getService_name() + " → Nouveau: " + newName);
             System.out.println("Ancien montant: " + subscription.getMonthly_amount() + " → Nouveau: " + newAmount + " MAD");
+            System.out.println("Ancien statut: " + subscription.getStatus() + " → Nouveau: " + newStatus);
             System.out.println("=======================================\n");
 
             if (InputValidator.readConfirmation("Confirmer les modifications ? (oui/non): ")) {
@@ -196,6 +176,13 @@ public class Menu {
                 }
                 if (!amountStr.isEmpty()) {
                     subscription.setMonthly_amount(Double.parseDouble(amountStr));
+                }
+                if (statusChoice != 0) {
+                    switch (statusChoice) {
+                        case 1: subscription.setStatus(enums.SubscriptionStatus.ACTIVE); break;
+                        case 2: subscription.setStatus(enums.SubscriptionStatus.SUSPENDED); break;
+                        case 3: subscription.setStatus(enums.SubscriptionStatus.CANCELLED); break;
+                    }
                 }
                 subscriptionService.updateSubscription(subscription);
                 System.out.println("✓ Abonnement modifié avec succès!");
@@ -218,21 +205,6 @@ public class Menu {
         }
     }
 
-    private void cancelSubscription() {
-        String id = InputValidator.readString("\nID de l'abonnement à résilier");
-        subscriptionService.cancelSubscription(id);
-    }
-
-    private void suspendSubscription() {
-        String id = InputValidator.readString("\nID de l'abonnement à suspendre");
-        subscriptionService.suspendSubscription(id);
-    }
-
-    private void reactivateSubscription() {
-        String id = InputValidator.readString("\nID de l'abonnement à réactiver");
-        subscriptionService.reactivateSubscription(id);
-    }
-
     private void displayAllSubscriptions() {
         List<Subscription> subscriptions = subscriptionService.findAllSubscriptions();
 
@@ -240,33 +212,6 @@ public class Menu {
             System.out.println("\nAucun abonnement trouvé");
         } else {
             System.out.println("\n=== LISTE DES ABONNEMENTS ===");
-            subscriptions.forEach(subscriptionService::displaySubscription);
-        }
-    }
-
-    private void displayActiveSubscriptions() {
-        List<Subscription> subscriptions = subscriptionService.findActiveSubscriptions();
-
-        if (subscriptions.isEmpty()) {
-            System.out.println("\nAucun abonnement actif");
-        } else {
-            System.out.println("\n=== ABONNEMENTS ACTIFS ===");
-            subscriptions.forEach(subscriptionService::displaySubscription);
-        }
-    }
-
-    private void searchByType() {
-        System.out.println("\n1. Avec engagement");
-        System.out.println("2. Sans engagement");
-
-        int choice = InputValidator.readInt("Choix");
-        String type = choice == 1 ? "with_commitment" : "without_commitment";
-
-        List<Subscription> subscriptions = subscriptionService.findSubscriptionsByType(type);
-
-        if (subscriptions.isEmpty()) {
-            System.out.println("\nAucun abonnement trouvé");
-        } else {
             subscriptions.forEach(subscriptionService::displaySubscription);
         }
     }
@@ -283,64 +228,6 @@ public class Menu {
             paymentService.displayTotalPaidForSubscription(id);
         } else {
             System.out.println("Abonnement non trouvé!");
-        }
-    }
-
-    private void extendSubscription() {
-        try {
-            String id = InputValidator.readString("\nID de l'abonnement à prolonger");
-            int months = InputValidator.readInt("Nombre de mois à ajouter");
-
-            subscriptionService.extendSubscription(id, months);
-
-        } catch (SQLException e) {
-            System.err.println("Erreur: " + e.getMessage());
-        }
-    }
-
-
-
-
-    private void paymentMenu() {
-        boolean back = false;
-
-        while (!back) {
-            System.out.println("          GESTION DES PAIEMENTS             ");
-            System.out.println("1. Enregistrer un paiement");
-            System.out.println("2. Modifier un paiement");
-            System.out.println("3. Supprimer un paiement");
-            System.out.println("4. Afficher les 5 derniers paiements");
-            System.out.println("5. Afficher la somme payée d'un abonnement");
-            System.out.println("6. Consulter les paiements manqués");
-            System.out.println("0. Retour");
-
-            int choice = InputValidator.readInt("\nVotre choix");
-
-            switch (choice) {
-                case 1:
-                    recordPayment();
-                    break;
-                case 2:
-                    updatePayment();
-                    break;
-                case 3:
-                    deletePayment();
-                    break;
-                case 4:
-                    paymentService.displayLastPayments(5);
-                    break;
-                case 5:
-                    displayTotalPaid();
-                    break;
-                case 6:
-                    paymentService.displayUnpaidPaymentsWithTotal();
-                    break;
-                case 0:
-                    back = true;
-                    break;
-                default:
-                    System.out.println("Choix invalide!");
-            }
         }
     }
 
@@ -458,7 +345,7 @@ public class Menu {
         boolean back = false;
 
         while (!back) {
-            System.out.println("    RAPPORTS ET STATISTIQUES          ");
+            System.out.println("\n    RAPPORTS FINANCIERS          ");
             System.out.println("1. Rapport mensuel");
             System.out.println("2. Rapport annuel");
             System.out.println("3. Rapport des impayés");

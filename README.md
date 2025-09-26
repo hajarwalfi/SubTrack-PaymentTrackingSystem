@@ -1,413 +1,172 @@
-# 🎯 SubTrack - Système de Suivi de Paiements par Abonnement
-
-<div align="center">
+# SubTrack - Système de Suivi de Paiements par Abonnement
 
 ![Java](https://img.shields.io/badge/Java-8-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![JDBC](https://img.shields.io/badge/JDBC-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![Java Version](https://img.shields.io/badge/Java-8%2B-brightgreen?style=flat-square)](https://www.oracle.com/java/)
-[![Architecture](https://img.shields.io/badge/Architecture-Layered-blue?style=flat-square)](#architecture)
+## Description
 
-</div>
+**SubTrack** est une application console Java développée dans le cadre d'un projet académique pour la gestion complète des abonnements. Elle permet de suivre automatiquement les paiements, détecter les impayés et générer des rapports financiers.
 
----
+L'application utilise **Java 8** avec programmation fonctionnelle (Stream API, Lambda, Optional) et une architecture en couches avec persistance JDBC.
 
-## 📋 Description
+## Fonctionnalités
 
-**SubTrack** est une application console Java sophistiquée conçue pour la **gestion complète des abonnements** avec un système de suivi automatique des paiements, détection intelligente des impayés et génération de rapports financiers détaillés.
+### Gestion des Abonnements
+- Créer des abonnements avec ou sans engagement
+- Modifier et supprimer des abonnements
+- Suspendre/réactiver des abonnements
+- Lister tous les abonnements
+- Génération automatique des échéances de paiement
 
-L'application utilise les fonctionnalités avancées de **Java 8** (Stream API, Lambda, Optional) et implémente une **architecture en couches robuste** avec persistance JDBC pour offrir une solution professionnelle de gestion d'abonnements.
+### Gestion des Paiements
+- Enregistrer des paiements
+- Modifier et supprimer des paiements
+- Afficher les paiements d'un abonnement
+- Détection automatique des impayés
+- Calculer le montant total payé par abonnement
+- Afficher les 5 derniers paiements
 
-### 🎯 Pourquoi SubTrack ?
+### Rapports et Statistiques
+- Rapport mensuel des paiements
+- Rapport annuel des paiements
+- Rapport détaillé des impayés
+- Analyse par statut de paiement
 
-Dans un monde où les abonnements numériques se multiplient (streaming, SaaS, services mobiles), **SubTrack** répond au besoin croissant de :
-- 📊 **Visibilité financière** : Comprendre ses coûts d'abonnement
-- ⏰ **Gestion des échéances** : Ne plus manquer de paiements
-- 📈 **Analyse prédictive** : Anticiper les dépenses futures
-- 🚨 **Détection d'anomalies** : Identifier rapidement les impayés
+## Architecture
 
----
-
-## ✨ Fonctionnalités Principales
-
-<table>
-<tr>
-<td width="50%">
-
-### 🏢 Gestion des Abonnements
-- ✅ **Création** avec/sans engagement
-- ✅ **Modification** en temps réel
-- ✅ **Suspension** temporaire
-- ✅ **Résiliation** avec gestion des pénalités
-- ✅ **Classification** automatique par type
-
-</td>
-<td width="50%">
-
-### 💳 Suivi des Paiements
-- ✅ **Génération automatique** des échéances
-- ✅ **Enregistrement** manuel ou automatique
-- ✅ **Détection intelligente** des impayés
-- ✅ **Historique complet** des transactions
-- ✅ **Calculs financiers** précis
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 📊 Rapports & Analytics
-- ✅ **Rapports mensuels/annuels** détaillés
-- ✅ **Analyse des tendances** de dépenses
-- ✅ **Prévisions budgétaires** intelligentes
-- ✅ **Export** des données (CSV/JSON)
-- ✅ **Tableaux de bord** visuels
-
-</td>
-<td width="50%">
-
-### 🎨 Interface Utilisateur
-- ✅ **Navigation intuitive** par menus
-- ✅ **Validation** robuste des saisies
-- ✅ **Messages d'erreur** explicites
-- ✅ **Formatage** professionnel des données
-- ✅ **Support multi-langue** (FR/EN)
-
-</td>
-</tr>
-</table>
-
----
-
-## 🛠️ Stack Technologique
-
-### Core Technologies
-- **☕ Java 8** - Langage principal avec fonctionnalités modernes
-- **🔗 JDBC** - Connectivité base de données native
-- **🐘 PostgreSQL / 🐬 MySQL** - Bases de données relationnelles
-- **📁 Maven** - Gestion des dépendances et build
-
-### Paradigmes de Programmation
-- **🔧 Programmation Fonctionnelle** - Stream API, Lambda, Optional
-- **🏗️ Architecture en Couches** - Séparation claire des responsabilités
-- **🎯 DAO Pattern** - Abstraction de l'accès aux données
-- **⚡ SOLID Principles** - Code maintenable et extensible
-
-### Outils de Développement
-- **🌿 Git** - Contrôle de version avec commits réguliers
-- **📝 Jira** - Organisation et suivi des tâches
-- **📚 JavaDoc** - Documentation automatique du code
-
----
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    🖥️ UI LAYER                          │
-│              (Console Interface)                        │
-├─────────────────────────────────────────────────────────┤
-│                  ⚡ SERVICE LAYER                        │
-│         AbonnementService | PaiementService             │
-├─────────────────────────────────────────────────────────┤
-│                   📦 ENTITY LAYER                        │
-│     Abonnement (Abstract) | Paiement | Enums           │
-├─────────────────────────────────────────────────────────┤
-│                    🗄️ DAO LAYER                          │
-│         AbonnementDAO | PaiementDAO (JDBC)              │
-├─────────────────────────────────────────────────────────┤
-│                  🔧 UTILITY LAYER                        │
-│        DateUtils | ValidationUtils | FormatUtils       │
-└─────────────────────────────────────────────────────────┘
-                               ⬇️
-                    🗃️ DATABASE (PostgreSQL/MySQL)
-```
-
-### 📁 Structure du Projet
+L'application suit une architecture en couches:
 
 ```
 src/main/java/
-├── 📦 entities/
-│   ├── 🏛️ Abonnement.java (Abstract)
-│   ├── 💼 AbonnementAvecEngagement.java
-│   ├── 🆓 AbonnementSansEngagement.java
-│   ├── 💳 Paiement.java
-│   └── 📋 enums/
-│       ├── StatutAbonnement.java
-│       ├── StatutPaiement.java
-│       └── TypeAbonnement.java
-├── 🗄️ dao/
-│   ├── interfaces/
-│   │   ├── AbonnementDAO.java
-│   │   └── PaiementDAO.java
-│   └── impl/
-│       ├── AbonnementDAOImpl.java
-│       └── PaiementDAOImpl.java
-├── ⚡ services/
-│   ├── AbonnementService.java
-│   ├── PaiementService.java
-│   └── RapportService.java
-├── 🖥️ ui/
-│   ├── ConsoleUI.java
-│   ├── MenuPrincipal.java
-│   └── ValidationInput.java
-├── 🔧 utils/
-│   ├── DateUtils.java
-│   ├── DatabaseConnection.java
-│   ├── FormatUtils.java
-│   └── ValidationUtils.java
-└── 🚀 Main.java
+├── UI/                    # Interface utilisateur
+│   ├── Main.java
+│   └── Menu.java
+├── service/               # Couche métier
+│   ├── SubscriptionService.java
+│   └── PaymentService.java
+├── entity/                # Entités métier
+│   ├── subscription/
+│   │   ├── Subscription.java (abstraite)
+│   │   ├── SubscriptionWithCommitment.java
+│   │   └── SubscriptionWithoutCommitment.java
+│   └── payment/
+│       └── Payment.java
+├── dao/                   # Accès aux données
+│   ├── SubscriptionDAO.java
+│   └── PaymentDAO.java
+├── enums/                 # Énumérations
+│   ├── SubscriptionStatus.java
+│   └── PaymentStatus.java
+└── util/                  # Utilitaires
+    ├── DatabaseConnection.java
+    ├── InputValidator.java
+    └── Helpers.java
 ```
 
----
+## Base de Données
 
-## 🚀 Installation et Configuration
+### Tables
+**subscription**: stockage des abonnements
+- `id` (VARCHAR(36) PRIMARY KEY)
+- `service_name` (VARCHAR(100))
+- `monthly_amount` (DECIMAL(10,2))
+- `start_date`, `end_date` (DATE)
+- `status` (VARCHAR(20))
+- `subscription_type` (VARCHAR(20))
+- `commitment_duration_months` (INT)
+
+**payment**: stockage des paiements
+- `id_payment` (VARCHAR(36) PRIMARY KEY)
+- `subscription_id` (VARCHAR(36) FK)
+- `due_date`, `payment_date` (DATE)
+- `payment_type` (VARCHAR(50))
+- `status` (VARCHAR(20))
+
+## Installation
 
 ### Prérequis
+- Java 8+
+- PostgreSQL ou MySQL
+- IDE Java (IntelliJ IDEA, Eclipse, VS Code)
 
-```bash
-# Vérifier Java 8+
-java -version
-# Output attendu: java version "1.8.0_xxx"
+### Configuration Base de Données
 
-# Vérifier Git
-git --version
-```
-
-### 📥 Clone du Repository
-
-```bash
-git clone https://github.com/TON_USERNAME/SubTrack-PaymentTrackingSystem.git
-cd SubTrack-PaymentTrackingSystem
-```
-
-### 🗃️ Configuration Base de Données
-
-<details>
-<summary>🐘 Configuration PostgreSQL</summary>
-
-```sql
--- Créer la base de données
-CREATE DATABASE subtrack_db;
-
--- Se connecter à la base
-\c subtrack_db;
-
--- Créer les tables
-CREATE TABLE abonnement (
-    id VARCHAR(36) PRIMARY KEY,
-    nom_service VARCHAR(100) NOT NULL,
-    montant_mensuel DECIMAL(10,2) NOT NULL,
-    date_debut DATE NOT NULL,
-    date_fin DATE,
-    statut VARCHAR(20) CHECK (statut IN ('ACTIVE', 'SUSPENDU', 'RESILIE')),
-    type_abonnement VARCHAR(30) CHECK (type_abonnement IN ('AVEC_ENGAGEMENT', 'SANS_ENGAGEMENT')),
-    duree_engagement_mois INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE paiement (
-    id_paiement VARCHAR(36) PRIMARY KEY,
-    id_abonnement VARCHAR(36) NOT NULL,
-    date_echeance DATE NOT NULL,
-    date_paiement DATE,
-    montant DECIMAL(10,2) NOT NULL,
-    type_paiement VARCHAR(50),
-    statut VARCHAR(20) CHECK (statut IN ('PAYE', 'NON_PAYE', 'EN_RETARD')),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_abonnement) REFERENCES abonnement(id) ON DELETE CASCADE
-);
-
--- Créer des index pour les performances
-CREATE INDEX idx_abonnement_statut ON abonnement(statut);
-CREATE INDEX idx_paiement_echeance ON paiement(date_echeance);
-CREATE INDEX idx_paiement_abonnement ON paiement(id_abonnement);
-```
-
-</details>
-
-<details>
-<summary>🐬 Configuration MySQL</summary>
-
-```sql
--- Créer la base de données
-CREATE DATABASE subtrack_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE subtrack_db;
-
--- [Même structure que PostgreSQL avec syntaxe MySQL]
-```
-
-</details>
-
-### ⚙️ Configuration Application
-
-Créer le fichier `src/main/resources/database.properties` :
+1. Créer une base de données `subtrack_db`
+2. Exécuter le script SQL fourni dans `sql/script.sql`
+3. Configurer le fichier `db.properties`:
 
 ```properties
-# PostgreSQL Configuration
 db.url=jdbc:postgresql://localhost:5432/subtrack_db
-db.username=your_username
+db.user=your_username
 db.password=your_password
-db.driver=org.postgresql.Driver
-
-# MySQL Configuration (Alternative)
-# db.url=jdbc:mysql://localhost:3306/subtrack_db?useSSL=false&serverTimezone=UTC
-# db.username=your_username
-# db.password=your_password
-# db.driver=com.mysql.cj.jdbc.Driver
-
-# Application Configuration
-app.name=SubTrack Payment System
-app.version=1.0.0
-app.locale=fr_FR
 ```
 
----
+### Lancement
+1. Cloner le projet
+2. Configurer la base de données
+3. Compiler et exécuter `UI.Main.java`
 
-## 🎮 Utilisation
+## Utilisation
 
-### Démarrage de l'Application
-
-```bash
-# Compiler le projet
-javac -cp ".:lib/*" src/main/java/**/*.java -d build/
-
-# Exécuter l'application
-java -cp "build:lib/*" Main
-```
-
-### 🖥️ Interface Console
+L'application propose un menu console interactif:
 
 ```
-╔══════════════════════════════════════════════════════════╗
-║               🎯 SUBTRACK - MENU PRINCIPAL                ║
-╠══════════════════════════════════════════════════════════╣
-║                                                          ║
-║  📋 1. Gestion des Abonnements                           ║
-║      ├── Créer un nouvel abonnement                     ║
-║      ├── Modifier un abonnement existant                ║
-║      ├── Supprimer un abonnement                        ║
-║      └── Lister tous les abonnements                    ║
-║                                                          ║
-║  💳 2. Gestion des Paiements                             ║
-║      ├── Enregistrer un paiement                        ║
-║      ├── Consulter l'historique                         ║
-║      └── Gérer les impayés                              ║
-║                                                          ║
-║  📊 3. Rapports et Analyses                              ║
-║      ├── Rapport mensuel                                ║
-║      ├── Rapport annuel                                 ║
-║      ├── Analyse des impayés                            ║
-║      └── Prévisions budgétaires                         ║
-║                                                          ║
-║  ⚙️  4. Paramètres                                        ║
-║  🚪 5. Quitter                                           ║
-║                                                          ║
-╚══════════════════════════════════════════════════════════╝
+SYSTÈME DE SUIVI DES ABONNEMENTS
+MENU PRINCIPAL
+1. Gestion des abonnements
+2. Gestion des paiements  
+3. Rapports et statistiques
+4. Détection des impayés
+0. Quitter
 ```
 
----
+### Exemples d'utilisation
 
-## 📊 Exemples de Rapports
+**Créer un abonnement:**
+1. Choisir "1. Gestion des abonnements"
+2. Sélectionner "1. Créer un abonnement"
+3. Renseigner le type (avec/sans engagement)
+4. Saisir les informations (nom service, montant, etc.)
 
-### 📈 Rapport Mensuel
+**Détecter les impayés:**
+1. Choisir "4. Détection des impayés"
+2. Le système affiche automatiquement tous les paiements en retard avec détails
 
-```
-╔═══════════════════════════════════════════════════════════════╗
-║                    📊 RAPPORT MENSUEL                         ║
-║                      Octobre 2025                            ║
-╠═══════════════════════════════════════════════════════════════╣
-║                                                               ║
-║  💰 Revenus Totaux: 1,247.50 €                               ║
-║  📋 Abonnements Actifs: 12                                   ║
-║  ✅ Paiements Réussis: 11 (91.7%)                            ║
-║  ⚠️  Paiements en Retard: 1                                   ║
-║                                                               ║
-║  🏆 Top Abonnements:                                          ║
-║   1. Netflix Premium     - 15.99 €                           ║
-║   2. Office 365         - 10.00 €                           ║
-║   3. Spotify Family     - 9.99 €                            ║
-║                                                               ║
-║  📊 Évolution:                                               ║
-║   ↗️ +5.2% par rapport au mois dernier                        ║
-║                                                               ║
-╚═══════════════════════════════════════════════════════════════╝
-```
+## Technologies Utilisées
 
----
+- **Java 8**: Langage principal
+- **JDBC**: Connexion base de données
+- **PostgreSQL**: Base de données relationnelle
+- **Stream API**: Programmation fonctionnelle
+- **Optional**: Gestion des valeurs nulles
+- **Lambda**: Expressions fonctionnelles
 
-## 🔧 Concepts Techniques Avancés
+## Programmation Fonctionnelle
 
-### 🌊 Programmation Fonctionnelle
+Exemples d'utilisation dans le projet:
 
 ```java
-// Exemple: Calcul du revenu mensuel avec Stream API
-public double calculerRevenuMensuel(YearMonth mois) {
-    return paiements.stream()
-        .filter(p -> YearMonth.from(p.getDatePaiement()).equals(mois))
-        .filter(p -> p.getStatut() == StatutPaiement.PAYE)
-        .mapToDouble(Paiement::getMontant)
-        .sum();
-}
+// Filtrage et calcul avec Stream API
+List<Payment> unpaidPayments = allPayments.stream()
+    .filter(p -> p.getStatus() == PaymentStatus.UNPAID || p.getStatus() == PaymentStatus.LATE)
+    .collect(Collectors.toList());
 
-// Exemple: Détection des impayés avec Optional
-public Optional<List<Paiement>> detecterImpayes(String abonnementId) {
-    List<Paiement> impayes = paiements.stream()
-        .filter(p -> p.getIdAbonnement().equals(abonnementId))
-        .filter(p -> p.getDateEcheance().isBefore(LocalDate.now()))
-        .filter(p -> p.getStatut() != StatutPaiement.PAYE)
-        .collect(Collectors.toList());
-    
-    return impayes.isEmpty() ? Optional.empty() : Optional.of(impayes);
-}
+// Utilisation d'Optional
+Optional<Subscription> optSub = subscriptionDAO.findByID(subscriptionId);
+optSub.ifPresent(sub -> {
+    // traitement si présent
+});
+
+// Groupement avec Collectors
+Map<String, List<Payment>> paymentsBySubscription = payments.stream()
+    .collect(Collectors.groupingBy(Payment::getSubscription_id));
 ```
 
----
+## Auteur
 
-## 🧪 Tests et Qualité
+Développé dans le cadre d'un projet académique - Formation Concepteur Développeur d'Applications
 
-### 📋 Scénarios de Test
+## Statut du Projet
 
-- ✅ **Tests unitaires** pour chaque service
-- ✅ **Tests d'intégration** base de données
-- ✅ **Tests fonctionnels** interface utilisateur
-- ✅ **Tests de performance** avec gros volumes
-- ✅ **Tests de robustesse** gestion d'erreurs
-
-### 📊 Métriques de Qualité
-
-- **Couverture de code**: > 80%
-- **Complexité cyclomatique**: < 10
-- **Respect des conventions**: 100%
-- **Documentation**: JavaDoc complet
-
----
-
-## 📚 Documentation Technique
-
-### 🔗 Liens Utiles
-
-- [📖 Documentation Java 8 Stream API](https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html)
-- [🗄️ Guide JDBC](https://docs.oracle.com/javase/tutorial/jdbc/)
-- [🏗️ Architecture en Couches](https://martinfowler.com/eaaCatalog/layeredArchitecture.html)
-- [📝 Conventions Java](https://www.oracle.com/java/technologies/javase/codeconventions-contents.html)
-
-### 🎓 Compétences Développées
-
-| Compétence | Niveau | Description |
-|------------|--------|-------------|
-| Java 8 Features | ⭐⭐⭐ | Stream API, Lambda, Optional |
-| Architecture Logicielle | ⭐⭐⭐ | Couches, séparation des responsabilités |
-| Base de Données | ⭐⭐ | JDBC, requêtes SQL, transactions |
-| Programmation Fonctionnelle | ⭐⭐⭐ | Paradigme fonctionnel en Java |
-| Gestion de Projet | ⭐⭐ | Git, Jira, documentation |
-
----
-
-<div align="center">
-
-</div>
+Projet terminé et fonctionnel - toutes les exigences du brief sont implémentées et testées.

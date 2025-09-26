@@ -25,12 +25,12 @@ public class SubscriptionWithCommitment extends Subscription {
     public String toString() {
         return "AbonnementAvecEngagement{" +
                 "id='" + id + '\'' +
-                ", nomService='" + service_name + '\'' +
-                ", montantMensuel=" + monthly_amount +
-                ", dateDebut=" + start_date +
-                ", dateFin=" + end_date +
+                ", nom Service='" + service_name + '\'' +
+                ", montant Mensuel=" + monthly_amount +
+                ", date Debut=" + start_date +
+                ", date Fin=" + end_date +
                 ", statut=" + status +
-                ", dureeEngagementMois=" + commitment_duration_months +
+                ", duree Engagement Mois=" + commitment_duration_months +
                 '}';
     }
 }

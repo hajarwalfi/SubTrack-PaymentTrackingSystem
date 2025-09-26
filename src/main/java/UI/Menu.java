@@ -298,6 +298,9 @@ public class Menu {
         }
     }
 
+
+
+
     private void paymentMenu() {
         boolean back = false;
 
@@ -455,9 +458,7 @@ public class Menu {
         boolean back = false;
 
         while (!back) {
-            System.out.println("\n╔════════════════════════════════════════╗");
-            System.out.println("║    RAPPORTS ET STATISTIQUES            ║");
-            System.out.println("╚════════════════════════════════════════╝");
+            System.out.println("    RAPPORTS ET STATISTIQUES          ");
             System.out.println("1. Rapport mensuel");
             System.out.println("2. Rapport annuel");
             System.out.println("3. Rapport des impayés");

@@ -73,11 +73,11 @@ public class Payment {
     @Override
     public String toString() {
         return "Paiement{" +
-                "idPaiement='" + id_payment + '\'' +
-                ", idAbonnement='" + subscription_id + '\'' +
-                ", dateEcheance=" + due_date +
-                ", datePaiement=" + payment_date +
-                ", typePaiement='" + payment_type + '\'' +
+                "id Paiement='" + id_payment + '\'' +
+                ", id Abonnement='" + subscription_id + '\'' +
+                ", date Echeance=" + due_date +
+                ", date Paiement=" + payment_date +
+                ", type Paiement='" + payment_type + '\'' +
                 ", statut=" + status +
                 '}';
     }

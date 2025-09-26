@@ -78,10 +78,10 @@ public abstract class Subscription {
     public String toString() {
         return "Abonnement{" +
                 "id='" + id + '\'' +
-                ", nomService='" + service_name + '\'' +
-                ", montantMensuel=" + monthly_amount +
-                ", dateDebut=" + start_date +
-                ", dateFin=" + end_date +
+                ", nom Service='" + service_name + '\'' +
+                ", montant Mensuel=" + monthly_amount +
+                ", date Debut=" + start_date +
+                ", date Fin=" + end_date +
                 ", statut=" + status +
                 '}';
     }

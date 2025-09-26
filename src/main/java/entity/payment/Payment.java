@@ -1,12 +1,9 @@
 package entity.payment;
 
 import enums.PaymentStatus;
-
 import java.time.LocalDate;
 
-
 public class Payment {
-
     private String id_payment;
     private String subscription_id;
     private LocalDate due_date;
@@ -14,7 +11,7 @@ public class Payment {
     private String payment_type;
     private PaymentStatus status;
 
-    public Payment(String id_payment,String subscription_id, LocalDate due_date, String payment_type){
+    public Payment(String id_payment, String subscription_id, LocalDate due_date, String payment_type) {
         this.id_payment = id_payment;
         this.subscription_id = subscription_id;
         this.due_date = due_date;
@@ -23,7 +20,6 @@ public class Payment {
     }
 
     public Payment() {
-
     }
 
     public String getId_payment() {
@@ -75,8 +71,8 @@ public class Payment {
     }
 
     @Override
-    public String toString(){
-        return   "Paiement{" +
+    public String toString() {
+        return "Paiement{" +
                 "idPaiement='" + id_payment + '\'' +
                 ", idAbonnement='" + subscription_id + '\'' +
                 ", dateEcheance=" + due_date +

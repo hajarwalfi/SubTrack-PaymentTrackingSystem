@@ -1,7 +1,6 @@
 package entity.subscription;
 
 import enums.SubscriptionStatus;
-
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -13,12 +12,11 @@ public abstract class Subscription {
     protected LocalDate end_date;
     protected SubscriptionStatus status;
 
-
-    public Subscription(){
+    public Subscription() {
         this.id = UUID.randomUUID().toString();
     }
 
-    public Subscription(String service_name,double monthly_amount , LocalDate start_date, LocalDate end_date){
+    public Subscription(String service_name, double monthly_amount, LocalDate start_date, LocalDate end_date) {
         this.id = UUID.randomUUID().toString();
         this.service_name = service_name;
         this.monthly_amount = monthly_amount;

@@ -366,26 +366,6 @@ public Optional<List<Paiement>> detecterImpayes(String abonnementId) {
 }
 ```
 
-### 🎯 Pattern DAO Avancé
-
-```java
-// Interface générique pour réutilisabilité
-public interface GenericDAO<T, ID> {
-    Optional<T> findById(ID id);
-    List<T> findAll();
-    T save(T entity);
-    void update(T entity);
-    void delete(ID id);
-}
-
-// Implémentation spécialisée
-public class AbonnementDAOImpl implements AbonnementDAO {
-    // Utilisation de PreparedStatement pour la sécurité
-    // Gestion des transactions
-    // Pool de connexions pour les performances
-}
-```
-
 ---
 
 ## 🧪 Tests et Qualité
@@ -428,47 +408,6 @@ public class AbonnementDAOImpl implements AbonnementDAO {
 
 ---
 
-## 🤝 Contribution
-
-Nous accueillons avec plaisir les contributions ! Voici comment participer :
-
-1. 🍴 **Fork** le projet
-2. 🌿 Créer une branche feature (`git checkout -b feature/AmazingFeature`)
-3. 💾 Commit vos changements (`git commit -m 'Add AmazingFeature'`)
-4. 📤 Push vers la branche (`git push origin feature/AmazingFeature`)
-5. 🔄 Ouvrir une Pull Request
-
----
-
-## 📜 License
-
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
----
-
-## 👨‍💻 Auteur
-
-**[TON_NOM]** - *Développeur Java Full Stack*
-
-- 📧 Email: ton.email@example.com
-- 🔗 LinkedIn: [Ton Profil](https://linkedin.com/in/ton-profil)
-- 🐙 GitHub: [@ton-username](https://github.com/ton-username)
-
----
-
-## 🙏 Remerciements
-
-- 🏫 **École Simplon** - Formation et encadrement
-- 👥 **Communauté Java** - Ressources et inspiration
-- 📚 **Oracle** - Documentation exhaustive
-- 🌟 **Open Source Community** - Outils et libraries
-
----
-
 <div align="center">
-
-**⭐ Si ce projet vous a aidé, n'hésitez pas à lui donner une étoile ! ⭐**
-
-[🔝 Retour en haut](#-subtrack---système-de-suivi-de-paiements-par-abonnement)
 
 </div>

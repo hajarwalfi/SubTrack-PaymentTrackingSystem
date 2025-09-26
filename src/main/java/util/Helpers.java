@@ -6,11 +6,9 @@ import entity.payment.Payment;
 import entity.subscription.Subscription;
 import entity.subscription.SubscriptionWithCommitment;
 import entity.subscription.SubscriptionWithoutCommitment;
-
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 
 public class Helpers {
 
@@ -29,7 +27,7 @@ public class Helpers {
             subscription.setCommitment_duration_months(rs.getInt("commitment_duration_months"));
 
             return subscription;
-        }else {
+        } else {
             SubscriptionWithoutCommitment subscription = new SubscriptionWithoutCommitment();
             subscription.setId(rs.getString("id"));
             subscription.setService_name(rs.getString("service_name"));
@@ -58,5 +56,4 @@ public class Helpers {
 
         return payment;
     }
-
 }

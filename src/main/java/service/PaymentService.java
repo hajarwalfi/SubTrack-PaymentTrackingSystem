@@ -14,7 +14,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PaymentService {
-
     private final PaymentDAO paymentDAO;
     private final SubscriptionDAO subscriptionDAO;
 
@@ -30,14 +29,15 @@ public class PaymentService {
     public void recordPayment(String paymentId, LocalDate paymentDate) throws SQLException {
         Optional<Payment> optionalPayment = paymentDAO.findByID(paymentId);
 
-        optionalPayment.ifPresent(
-                payment -> {
-                    payment.setPayment_date(paymentDate);
-                    payment.setStatus(enums.PaymentStatus.PAID);
-                    paymentDAO.update(payment);
-                    System.out.println("Paiement enregistré avec succès");
-                }
-        );
+        if (optionalPayment.isPresent()) {
+            Payment payment = optionalPayment.get();
+            payment.setPayment_date(paymentDate);
+            payment.setStatus(PaymentStatus.PAID);
+            paymentDAO.update(payment);
+            System.out.println("Paiement enregistré avec succès");
+        } else {
+            System.out.println("❌ Paiement non trouvé avec cet ID");
+        }
     }
 
     public void updatePayment(Payment payment) {
@@ -61,11 +61,30 @@ public class PaymentService {
                 })
                 .collect(Collectors.toList());
 
-        if (overduePayments.isEmpty()) {
-            System.out.println("Aucun paiement en retard détecté");
-        } else {
-            System.out.println(overduePayments.size() + " paiements en retard détectés et mis à jour");
+        List<Payment> allUnpaidPayments = allPayments.stream()
+                .filter(p -> p.getStatus() == enums.PaymentStatus.UNPAID || p.getStatus() == enums.PaymentStatus.LATE)
+                .collect(Collectors.toList());
+
+        System.out.println("\n=== DÉTECTION DES IMPAYÉS ===");
+        if (overduePayments.size() > 0) {
+            System.out.println("⚠️  " + overduePayments.size() + " paiements mis à jour vers 'EN RETARD'");
         }
+        if (allUnpaidPayments.isEmpty()) {
+            System.out.println("✅ Aucun paiement impayé détecté");
+        } else {
+            System.out.println("❌ " + allUnpaidPayments.size() + " paiements impayés au total");
+            double totalUnpaidAmount = calculateTotalUnpaidAmount();
+            System.out.println("Montant total impaye: " + String.format("%.2f", totalUnpaidAmount) + " MAD");
+            long unpaidCount = allUnpaidPayments.stream()
+                    .filter(p -> p.getStatus() == enums.PaymentStatus.UNPAID)
+                    .count();
+            long lateCount = allUnpaidPayments.stream()
+                    .filter(p -> p.getStatus() == enums.PaymentStatus.LATE)
+                    .count();
+            System.out.println("   - Non payés: " + unpaidCount);
+            System.out.println("   - En retard: " + lateCount);
+        }
+        System.out.println("==============================\n");
     }
 
     public List<Payment> getUnpaidPaymentsBySubscription(String subscriptionId) {
@@ -87,10 +106,8 @@ public class PaymentService {
         }
 
         System.out.println("\n=== PAIEMENTS IMPAYÉS ===");
-
         unpaidBySubscription.forEach((subId, payments) -> {
             Optional<Subscription> optSub = subscriptionDAO.findByID(subId);
-
             optSub.ifPresent(subscription -> {
                 System.out.println("\nAbonnement: " + subscription.getService_name());
                 System.out.println("ID: " + subId);
@@ -99,10 +116,8 @@ public class PaymentService {
                     double totalUnpaid = payments.stream()
                             .mapToDouble(p -> subscription.getMonthly_amount())
                             .sum();
-
                     System.out.println("Nombre de paiements impayés: " + payments.size());
-                    System.out.println("Montant total impayé: " + totalUnpaid + " €");
-
+                    System.out.println("Montant total impayé: " + totalUnpaid + " MAD");
                     payments.forEach(p ->
                             System.out.println("  - Échéance: " + p.getDue_date() +
                                     " | Statut: " + p.getStatus())
@@ -134,15 +149,13 @@ public class PaymentService {
     public void displayTotalPaidForSubscription(String subscriptionId) {
         Optional<Subscription> optSub = subscriptionDAO.findByID(subscriptionId);
 
-        optSub.ifPresent(
-                subscription -> {
-                    double totalPaid = calculateTotalPaidForSubscription(subscriptionId);
-                    System.out.println("\n=== TOTAL PAYÉ ===");
-                    System.out.println("Abonnement: " + subscription.getService_name());
-                    System.out.println("Montant total payé: " + totalPaid + " €");
-                    System.out.println("==================\n");
-                }
-        );
+        optSub.ifPresent(subscription -> {
+            double totalPaid = calculateTotalPaidForSubscription(subscriptionId);
+            System.out.println("\n=== TOTAL PAYÉ ===");
+            System.out.println("Abonnement: " + subscription.getService_name());
+            System.out.println("Montant total payé: " + totalPaid + " MAD");
+            System.out.println("==================\n");
+        });
     }
 
     public void displayLastPayments(int limit) {
@@ -154,7 +167,6 @@ public class PaymentService {
         }
 
         System.out.println("\n=== " + limit + " DERNIERS PAIEMENTS ===");
-
         lastPayments.forEach(payment -> {
             Optional<Subscription> optSub = subscriptionDAO.findByID(payment.getSubscription_id());
             optSub.ifPresent(sub ->
@@ -176,7 +188,6 @@ public class PaymentService {
         List<Payment> monthlyPayments = paymentDAO.findAll().stream()
                 .filter(p -> !p.getDue_date().isBefore(startDate) && !p.getDue_date().isAfter(endDate))
                 .collect(Collectors.toList());
-
         Map<enums.PaymentStatus, List<Payment>> paymentsByStatus = monthlyPayments.stream()
                 .collect(Collectors.groupingBy(Payment::getStatus));
 
@@ -200,7 +211,7 @@ public class PaymentService {
                 })
                 .sum();
 
-        System.out.println("Montant total encaissé: " + totalAmount + " €");
+        System.out.println("Montant total encaissé: " + totalAmount + " MAD");
         System.out.println("===================================\n");
     }
 
@@ -227,7 +238,7 @@ public class PaymentService {
                 })
                 .sum();
 
-        System.out.println("Montant total encaissé: " + totalPaid + " €");
+        System.out.println("Montant total encaissé: " + totalPaid + " MAD");
 
         Map<Integer, Double> monthlyRevenue = annualPayments.stream()
                 .filter(p -> p.getStatus() == enums.PaymentStatus.PAID && p.getPayment_date() != null)
@@ -243,7 +254,7 @@ public class PaymentService {
         monthlyRevenue.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .forEach(entry ->
-                        System.out.println("Mois " + entry.getKey() + ": " + entry.getValue() + " €")
+                        System.out.println("Mois " + entry.getKey() + ": " + entry.getValue() + " MAD")
                 );
 
         System.out.println("==============================\n");
@@ -272,7 +283,7 @@ public class PaymentService {
                 })
                 .sum();
 
-        System.out.println("Montant total impayé: " + totalUnpaid + " €");
+        System.out.println("Montant total impayé: " + totalUnpaid + " MAD");
 
         System.out.println("\nDétail par abonnement:");
         unpaidPayments.stream()
@@ -289,5 +300,107 @@ public class PaymentService {
                 });
 
         System.out.println("\n===========================\n");
+    }
+
+    public void displayPaymentsBySubscription(String subscriptionId) {
+        List<Payment> payments = paymentDAO.findBySubscription(subscriptionId);
+
+        if (payments.isEmpty()) {
+            System.out.println("Aucun paiement pour cet abonnement");
+            return;
+        }
+
+        Optional<Subscription> optSub = subscriptionDAO.findByID(subscriptionId);
+        optSub.ifPresent(sub -> {
+            System.out.println("\n=== LISTE DES PAIEMENTS ===");
+            payments.forEach(payment ->
+                    System.out.println("ID: " + payment.getId_payment() +
+                            " | Échéance: " + payment.getDue_date() +
+                            " | Payé le: " + payment.getPayment_date() +
+                            " | Statut: " + payment.getStatus())
+            );
+            System.out.println("Total: " + payments.size() + " paiements");
+            System.out.println("===========================\n");
+        });
+
+
+    }
+    public Optional<Payment> getPaymentById(String id) throws SQLException {
+        return paymentDAO.findByID(id);
+    }
+
+    public double calculateTotalUnpaidAmount() {
+        return paymentDAO.findAll().stream()
+                .filter(p -> p.getStatus() == enums.PaymentStatus.UNPAID || p.getStatus() == enums.PaymentStatus.LATE)
+                .mapToDouble(p -> {
+                    Optional<Subscription> optSub = subscriptionDAO.findByID(p.getSubscription_id());
+                    return optSub.map(Subscription::getMonthly_amount).orElse(0.0);
+                })
+                .sum();
+    }
+
+    public void displayMissedPaymentsReport() {
+        List<Payment> allPayments = paymentDAO.findAll();
+        LocalDate today = LocalDate.now();
+
+        // Grouper les impayés par abonnement
+        Map<String, List<Payment>> unpaidBySubscription = allPayments.stream()
+                .filter(p -> p.getStatus() == enums.PaymentStatus.UNPAID || p.getStatus() == enums.PaymentStatus.LATE)
+                .collect(Collectors.groupingBy(Payment::getSubscription_id));
+
+        if (unpaidBySubscription.isEmpty()) {
+            System.out.println("✅ Aucun paiement manqué détecté");
+            return;
+        }
+
+        System.out.println("\n=== RAPPORT DES PAIEMENTS MANQUÉS ===");
+        
+        double totalMissedAmount = 0.0;
+        int totalMissedPayments = 0;
+        int subscriptionsWithCommitmentAffected = 0;
+
+        for (Map.Entry<String, List<Payment>> entry : unpaidBySubscription.entrySet()) {
+            String subId = entry.getKey();
+            List<Payment> missedPayments = entry.getValue();
+            
+            Optional<Subscription> optSub = subscriptionDAO.findByID(subId);
+            
+            if (optSub.isPresent()) {
+                Subscription subscription = optSub.get();
+                boolean isWithCommitment = subscription instanceof SubscriptionWithCommitment;
+                
+                double subscriptionUnpaidAmount = missedPayments.size() * subscription.getMonthly_amount();
+                totalMissedAmount += subscriptionUnpaidAmount;
+                totalMissedPayments += missedPayments.size();
+                
+                if (isWithCommitment) {
+                    subscriptionsWithCommitmentAffected++;
+                }
+                
+                System.out.println("\nAbonnement: " + subscription.getService_name());
+                System.out.println("Type: " + (isWithCommitment ? "Avec engagement" : "Sans engagement"));
+                System.out.println("Montant mensuel: " + subscription.getMonthly_amount() + " MAD");
+                System.out.println("Paiements manques: " + missedPayments.size());
+                System.out.println("Montant total impaye: " + String.format("%.2f", subscriptionUnpaidAmount) + " MAD");
+                
+                // Afficher les détails des paiements manqués
+                System.out.println("Detail des echeances:");
+                missedPayments.stream()
+                        .sorted(Comparator.comparing(Payment::getDue_date))
+                        .forEach(payment -> {
+                            long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(payment.getDue_date(), today);
+                            String overdueInfo = payment.getStatus() == enums.PaymentStatus.LATE ?
+                                    " (" + daysOverdue + " jours de retard)" : "";
+                            System.out.println("  " + payment.getDue_date() +
+                                    " - " + payment.getStatus() + overdueInfo);
+                        });
+            }
+        }
+        
+        System.out.println("\nRESUME GLOBAL:");
+        System.out.println("Total abonnements concernes: " + unpaidBySubscription.size());
+        System.out.println("Dont avec engagement: " + subscriptionsWithCommitmentAffected);
+        System.out.println("Total paiements manques: " + totalMissedPayments);
+        System.out.println("MONTANT TOTAL IMPAYE: " + String.format("%.2f", totalMissedAmount) + " MAD\n");
     }
 }
